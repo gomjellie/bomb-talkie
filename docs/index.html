@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="google-site-verification" content="3yBrIhFwSzpy9YKMmKgZO1PK7rq_jrpcA72_33_gohQ" />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" href="img/favicon.png"/>
+    <meta name="msapplication-TileImage" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="img/favicon.png">
+    <title>jellyTranslator extends google translate</title>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Bomb Talkie --help</h1>
+            <h2>빵 터지는 대화!</h2>
+            <section id="downloads">
+                <!--<a href="https://chrome.google.com/webstore/detail/jelly-translator/lecfocdhckbmhibflggjmaohgnpdadck" class="btn">Download at Store</a>-->
+                <!--&lt;!&ndash;a href="https://github.com/gomjellie" class="btn">Download as .tar.gz</a&ndash;&gt;-->
+                <!--<a href="https://github.com/gomjellie/jelly-translator" class="btn btn-github"><span class="icon"></span>View on GitHub</a>-->
+            </section>
+        </div>
+    </header>
+    <div class="container">
+        <section id="main_content">
+            <!--p>Text can be <strong>bold</strong>, <em>italic</em>, or
+                <del>strikethrough</del>.</p-->
+            <h1>소개</h1>
+            <p>빵 터지는 대화는 ~입니다</p>
+            <p>~~~해서 ~~~합니다.</p>
+
+            <h1 id="header-1header-1"><a href="#header-1"></a>제작 배경</h1>
+
+            <img src="img/keep-talking-logo.png" alt="" />
+            <p>
+                원작 게임 Keep Talking and Nobody Explodes를 과방에서 하다가 게임내용을 현실로 구현하고 싶어서 만들게 되었습니다.
+            </p>
+
+
+            <h1 id="header-2header-2"><a href="#header-2"></a>게임 내용 소개</h1>
+            <!--p align="center"><img src="img/page_low.gif" alt="" /></p-->
+            <div style='position:relative;padding-bottom:40%'>
+                <p>플레이 영상</p>
+                <iframe width="420" height="300"
+                        frameborder='0' scrolling='no'
+                        style='position:absolute;top:0;left:0;' allowfullscreen
+                        src="https://www.youtube.com/embed/kkdbzFV1NoQ">
+                </iframe>
+            </div>
+            <blockquote>
+                <p>
+                    <del>git 파일 로딩때문에 최초 재생시 느려 보입니다.</del>
+                </p>
+            </blockquote>
+            <img src="img/bomb-image.png" alt="" />
+
+            <h3>명령어들</h3>
+            <p>
+                각 폭탄에는 최대 11개의 모듈이 있으며, 이를 모두 꺼야한다.
+                각 모듈은 개별적으로 작동하며, 끄는 순서 역시 정해져있지 않다.
+            </p>
+            <p>
+
+                모듈을 해제하는 방법은 Section 1에 있다.
+                몇몇 폭탄에 있는 특별한 'Needy'모듈은 Section 2에서 설명하고. 있다
+            </p>
+
+            <h3>Strikes</h3>
+            <p>
+                폭탄 해체자가 실수를 하면, 카운트다운 타이머의 위쪽 작은 화면에 스트라이크가 기록된다.
+                스트라이크 계기판이 있는 폭탄은 3개의 스트라이크가 기록되면 폭발한다. 스트라이크가 기록되면 카운트다운 타이머는 더 빠르게 만료되기 시작한다.
+            </p>
+            <p>
+                카운트다운 타이머 위쪽에 스트라이크 계기판이 없는 폭탄은 스트라이크를 1개만 기록해도 폭발한다. 실수 따윈 허용되지 않는다.
+            </p>
+
+            <h3>
+                Gathering Information
+            </h3>
+
+            <p>
+                모듈해제를 위한 설명중 일부는 '시리얼번호'와 같은 구체적인 특정사항을 요구한다. 이런 사항에 대한 정보는 폭탄 케이스의 위,아래,양옆에서 찾을 수 있다.
+                부록 A,B,C에서 이러한 모듈들을 해제하는데 유용한 정보를 확인할수 있다.
+            </p>
+
+            <h2>
+                Section 1: Modules
+            </h2>
+
+            <blockquote>
+                <p>
+                    모듈에 오른쪽 위에는 LED가 있다. 이 LED에 녹색불이 들어오면 그것은 모듈이 해제되었음을 의미한다.
+                    폭탄은 해체하기 위해서는 모든 모듈을 꺼야한다.
+                </p>
+            </blockquote>
+
+            <footer>
+                <div class="ui footer" align="center">
+                    <div>&copy;<a id="footer" href="https://gomjellie.github.io" target="_blank">gomjellie</a></div>
+                    <div>Bomb-Talkie extends <a href="http://www.keeptalkinggame.com/" target="_blank">Keep Talking Nobody Explodes</a></div>
+                </div>
+            </footer>
+        </section>
+    </div>
+</body>
+
+</html>
