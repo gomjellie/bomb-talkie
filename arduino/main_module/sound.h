@@ -5,13 +5,28 @@
 #include"pitches.h"
 #include <avr/pgmspace.h>
 
+extern const int PIEZO_PIN;
+
 /*음표 구조체 선언*/
 struct note { 
   int pitch; //음높이
   int tempo; //박자
 };
 
-extern const void sound_play(char *sheet_name);
+/*효과음*/
+void _attach_sound(){
+  tone(PIEZO_PIN, D_4, 180);
+  delay(200); // should be sleep
+  tone(PIEZO_PIN, A_4, 150);
+  delay(2000);
+}//playmusic없이 가는게 시간을 안까먹음.
+
+void _detach_sound(){
+  tone(PIEZO_PIN, A_4, 150);
+  delay(200); // should be sleep
+  tone(PIEZO_PIN, D_4, 180);
+  delay(2000);
+}
 
 /*************************************************
  * 악보 배열 선언부
@@ -144,7 +159,7 @@ const struct note  explode[] PROGMEM= {
 
 //// tik tok
 //// notes written by gomjellie & fetiu @fetiu's home
-const struct note  tiktok[] PROGMEM= {
+const struct note  tiktok[]= {
   {0, 8},
   {E_6, 16},{0, 32},{C_4, 32},
   {CS5, 8},
@@ -215,4 +230,46 @@ const struct note   final_fantasy[] PROGMEM= {
   //// Ending note
   {C_7, 2}
 };
+
+extern void play_notes(const note *music, int music_length);
+/* 음악재생 함수 선언*/
+const void sound_play(char *sheet_name){
+    /**
+     * param: sheet_name :
+     *      e.g.) "underworld", "final_fantasy", "sweep", "explode", "tiktok", "airplane", "attach", "detach"
+     * **/
+    int music_length;
+    if (strcmp(sheet_name, "underworld") == 0) {
+        music_length = sizeof(underworld) / sizeof(note);
+        play_notes(underworld, music_length);
+    }
+    else if (strcmp(sheet_name, "final_fantasy") == 0) {
+        music_length = sizeof(final_fantasy) / sizeof(note);
+        play_notes(final_fantasy, music_length);
+    }
+    else if (strcmp(sheet_name, "sweep") == 0) {
+        music_length = sizeof(sweep) / sizeof(note);
+        play_notes(sweep, music_length);
+    }
+    else if (strcmp(sheet_name, "explode") == 0) {
+        music_length = sizeof(explode) / sizeof(note);
+        play_notes(explode, music_length);
+    }
+    else if (strcmp(sheet_name, "tiktok") == 0) {
+        music_length = sizeof(tiktok) / sizeof(note);
+        play_notes(tiktok, music_length);
+    }
+    else if (strcmp(sheet_name, "airplane") == 0) {
+        music_length = sizeof(airplane) / sizeof(note);
+        play_notes(airplane, music_length);
+    }
+    else if (strcmp(sheet_name, "attach") == 0) {
+        _attach_sound();
+    }
+    else if (strcmp(sheet_name, "detach") == 0) {
+        _detach_sound();
+    }
+}
+
+
 
