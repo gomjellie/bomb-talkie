@@ -17,9 +17,10 @@ extern const struct note tiktok[];
 
 /*----사용할 모드만 남기고 주석처리 해주세요.----*/
 #define TIMER_MODE //일반 delay
-//#define DEBUG_MODE //to see Serial debug messages
-//#define THREAD_MODE //to test multi-threaded function 
+//#define THREAD_MODE //to test multi-threaded function.
 //#define MUSIC_MODE
+//#define DEBUG_MODE //디버그 모드로 전환하여 세그먼트 출력 값을 보려면 주석 해제.
+/*정상적으로 세그먼트를 보려면 DEBUG_MODE는 반드시 주석처리해야함.*/
 
 #ifdef TIMER_MODE
 #include"timer.h"
