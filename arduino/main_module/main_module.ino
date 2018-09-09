@@ -16,8 +16,9 @@ extern const struct note sweep[];
 extern const struct note tiktok[];
 
 /*----사용할 모드만 남기고 주석처리 해주세요.----*/
-#define TIMER_MODE //0 이면 일반 delay
-//#define THREAD_MODE
+#define TIMER_MODE //일반 delay
+//#define DEBUG_MODE //to see Serial debug messages
+//#define THREAD_MODE //to test multi-threaded function 
 //#define MUSIC_MODE
 
 #ifdef TIMER_MODE
