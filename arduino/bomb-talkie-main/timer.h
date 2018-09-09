@@ -15,11 +15,11 @@
 float time_count = MAX_TIME;
 float sound_speed= 800; //이걸 줄이면 카운트 속도가 빨라짐. 최대 1000
 //BGM을 재생할때는 원래 속도로 돌려놓는것 잊지말기.
+//#TODO: 전선 잘 짜르면 1000으로 올라가서 느리게 만드는것도 해보자.
 
-//전선 잘 짜르면 1000으로 올라가서 느리게 만드는것도 해보자.
+extern const int digit_pins[];// size 4
+extern const int segment_pins[]; //size 8
 
-const int digit_select_pin[] = {A0, 13, 12, 11};
-const int segment_pin[] = {2, 3, 4, 5, 6, 7, 8, 9};
 /* segment표시 위한 배열 정의 */
 bool number_data[10][8]={
   {1, 1, 1, 1, 1, 1, 0, 0}, //0
@@ -34,7 +34,6 @@ bool number_data[10][8]={
   {1, 1, 1, 0, 0, 1, 1, 0}  //9
 };// anode일 경우 원소 호출시 앞에 !붙이기
 
-
 void show_digit(int pos, int number){
   bool value, segment_value;
 #ifdef DEBUG
@@ -46,13 +45,13 @@ void show_digit(int pos, int number){
   /*select a digit.*/
   for(int i = 0; i < 4; i++){
     value = (i == pos-1)? LOW : HIGH;
-    digitalWrite(digit_select_pin[i], value);
+    digitalWrite(digit_pins[i], value);
   }
   /*show a number on the segment*/
   for(int i = 0; i < 8; i++){
     segment_value = number_data[number][i];
-    digitalWrite(segment_pin[i], segment_value); //anode의 경우 켜질때 1, 끌때 0
-#ifndef DEBUG //Debug모드가 아니라면
+    digitalWrite(segment_pins[i], segment_value); //anode의 경우 켜질때 1, 끌때 0
+#ifndef DEBUG //Debug모드가 아니라면 5ms 딜레이후 종료.
   }
   delay(5);
   return;

@@ -1,44 +1,47 @@
-/* bom-talkie-master.ino for Bomb-Talkie a.k.a. 빵터지는 대화
+/* main_module.ino for Bomb-Talkie a.k.a. 빵터지는 대화
  * 
  * author: fetiu, gomjellie
  * last change: 2018.9.9
- * 메시지 포맷팅은 sprintf로 하는 것을 권장.
+ * 
+ * ps.메시지 포맷팅은 sprintf로 하는 것을 권장.
  */
-
 #include<Wire.h>
 #include"sheets.h"
-
-#define PIEZO_PIN 10
-#define SCL_PIN A5
-#define SDA_PIN A4
-/*for I2C*/
-//#define SLAVE_MODULE1 0x04
 
 /*----사용할 모드만 남기고 주석처리 해주세요.----*/
 #define TIMER_MODE //0 이면 일반 delay
 //#define THREAD_MODE
 //#define MUSIC_MODE
-/*--------*/
 
 #ifdef TIMER_MODE
 #include"timer.h"
 extern float time_count;
 extern float sound_speed;
 #endif
+/* 하드웨어 연결 정보 */
+/*for I2C*/
+#define SCL_PIN A5
+#define SDA_PIN A4
+//#define SLAVE_MODULE1 0x04
+/*for 4 digit 7 segment and timer*/
+#define PIEZO_PIN 10
+const int segment_pins[] = {2, 3, 4, 5, 6, 7, 8, 9};
+const int digit_pins[]  = {A0, 13, 12, 11};
 
-/* 악보배열 호출 */
+/* 악보 리스트 */
 extern const struct note airplane[];
 extern const struct note underworld[];
 extern const struct note final_fantasy[];
 extern const struct note sweep[];
 extern const struct note tiktok[];
 
+
 void setup() {
-  for(int i = 0; i < 4; i++)
-    pinMode(digit_select_pin[i], OUTPUT);
-  for(int i = 0; i < 8; i++)
-    pinMode(segment_pin[i], OUTPUT);
   pinMode(PIEZO_PIN,OUTPUT);
+  for(int i = 0; i < 4; i++)
+    pinMode(digit_pins[i], OUTPUT);
+  for(int i = 0; i < 8; i++)
+    pinMode(segment_pins[i], OUTPUT);
   Serial.begin(9600);
   Wire.begin(); //MASTER. 
   attach_sound();
@@ -60,7 +63,7 @@ void detach_sound(){
 }
 
  /* 음악재생 함수 선언*/
-void playMusic(note music[], int music_length){
+void play_music(note music[], int music_length){
   for(int i =0; i < music_length ; i++){ 
     int dur = 1000 / music[i].tempo;        //한 박자를 tempo만큼 분할.
     tone(PIEZO_PIN, music[i].pitch, dur); //i번째 note의 음 높이로 재생
@@ -78,11 +81,11 @@ void playMusic(note music[], int music_length){
 }
 
 void loop() {
-  for (int i = 0; i < MAX_TIME; i++) {
-    playMusic(tiktok, sizeof(tiktok) / sizeof(note));
+  while(time_count > 0) {
+    play_music(tiktok, sizeof(tiktok) / sizeof(note));
   }
   detach_sound();
-  playMusic(final_fantasy, sizeof(final_fantasy) / sizeof(note));
+  play_music(final_fantasy, sizeof(final_fantasy) / sizeof(note));
 }
 
 
