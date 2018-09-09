@@ -9,9 +9,6 @@
 #define MINUTE 1000 // 1 minute for countdown 
 #define MAX_TIME 300 // 5 minute
 
-//#define DEBUG //디버그 모드로 전환하여 세그먼트 출력 값을 보려면 주석 해제.
-/*정상적으로 세그먼트를 보려면 반드시 주석처리해야함.*/
-
 float time_count = MAX_TIME;
 float timer_speed= 800; //이걸 줄이면 카운트 속도가 빨라짐. 최대 1000
 //BGM을 재생할때는 원래 속도로 돌려놓는것 잊지말기.
@@ -36,7 +33,7 @@ bool number_data[10][8]={
 
 void show_digit(int pos, int number){
   bool value, segment_value;
-#ifdef DEBUG
+#ifdef DEBUG_MODE
   String msg= "digit " + str(pos) + ": "; //세그먼트 작동 테스트용 메시지.
   int sleeptime;
   Serial.print("sleep할 시간을 지정하세요(0~1000ms");
@@ -51,7 +48,7 @@ void show_digit(int pos, int number){
   for(int i = 0; i < 8; i++){
     segment_value = number_data[number][i];
     digitalWrite(segment_pins[i], segment_value); //anode의 경우 켜질때 1, 끌때 0
-#ifndef DEBUG .
+#ifndef DEBUG_MODE
   }//Debug모드가 아니라면 5ms 딜레이후 종료
   delay(5);
   return;
