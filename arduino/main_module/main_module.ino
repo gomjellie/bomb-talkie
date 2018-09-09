@@ -57,7 +57,7 @@ void detach_sound(){
 }
 
  /* 음악재생 함수 선언*/
-void play_music(note music[], int music_length){
+void play_music(const note music[], int music_length){
   for(int i =0; i < music_length ; i++){ 
     int dur = 1000 / music[i].tempo;        //한 박자를 tempo만큼 분할.
     tone(PIEZO_PIN, music[i].pitch, dur); //i번째 note의 음 높이로 재생
