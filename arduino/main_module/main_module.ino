@@ -19,6 +19,7 @@
 #include"timer.h"
 extern float time_count; //5 * 60 s
 extern float timer_speed;
+extern bool success;
 #endif
 /* 하드웨어 연결 정보 */
 /*for I2C*/
@@ -47,8 +48,11 @@ void loop() {
     Serial.println(timer_speed);
     sound_play("tiktok");
     if(timer_speed > 1020){
-      sound_play("final_fantasy");
-      sound_play("detach");
+        success = true;
+        sound_play("final_fantasy");
+        sound_play("detach");
+
+        exit(0);
     }
   }
   timer_speed = 50;
