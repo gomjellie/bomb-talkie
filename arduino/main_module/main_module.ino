@@ -8,13 +8,6 @@
 #include<Wire.h>
 #include"sheets.h"
 
-/* 악보 리스트 */
-extern const struct note airplane[];
-extern const struct note underworld[];
-extern const struct note final_fantasy[];
-extern const struct note sweep[];
-extern const struct note tiktok[];
-
 /*----사용할 모드만 남기고 주석처리 해주세요.----*/
 #define TIMER_MODE //일반 delay
 //#define THREAD_MODE //to test multi-threaded function.
@@ -24,7 +17,7 @@ extern const struct note tiktok[];
 
 #ifdef TIMER_MODE
 #include"timer.h"
-extern float time_count;
+extern float time_count; //5 * 60 s
 extern float timer_speed;
 #endif
 /* 하드웨어 연결 정보 */
@@ -79,14 +72,27 @@ void play_music(note music[], int music_length){
   }
 }
 
+/* 악보 리스트 */
+extern const struct note airplane[];
+extern const struct note underworld[];
+extern const struct note final_fantasy[];
+extern const struct note sweep[];
+extern const struct note tiktok[];
+
 void loop() {
   while(time_count > 0) {
     timer_speed = analogRead(A1);
-    play_music(tiktok, sizeof(tiktok) / sizeof(note));
     Serial.println(timer_speed);
+    play_music(tiktok, sizeof(tiktok) / sizeof(note));
+    if(timer_speed > 1020){
+      play_music(final_fantasy, sizeof(final_fantasy) / sizeof(note));
+      detach_sound();
+    }
   }
-  detach_sound();
-  play_music(final_fantasy, sizeof(final_fantasy) / sizeof(note));
+  timer_speed = 50;
+  for(int i=0; i<5; i++) play_music(explode, sizeof(underworld) / sizeof(note)); //it sounds like boom.
+  
+  exit(0);
 }
 
 

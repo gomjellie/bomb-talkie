@@ -7,7 +7,7 @@
 #define append concat //**주의**
 #define BUFF_SIZE 80 //for sprintf message
 #define MINUTE 1000 // 1 minute for countdown 
-#define MAX_TIME 300 // 5 minute
+#define MAX_TIME 50 // 5 minute
 
 float time_count = MAX_TIME;
 float timer_speed= 800; //이걸 줄이면 카운트 속도가 빨라짐. 최대 1000
@@ -76,8 +76,10 @@ void delay_countdown(int duration){
       show_digit(3, second/10); // second 1st digit
       show_digit(4, (int)second%10); // second 2nd digit
     }// 5ms * 4 routines = 20ms for one cycle. duration should be devides by that.
-    
     time_count -= duration/timer_speed;  // 재생한 노트 길이 만큼이 전체 시간에서 빼줌.
+  }
+  else{
+    delay(duration);
   }
 }
 
