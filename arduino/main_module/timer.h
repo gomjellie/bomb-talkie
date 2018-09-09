@@ -13,7 +13,7 @@
 /*정상적으로 세그먼트를 보려면 반드시 주석처리해야함.*/
 
 float time_count = MAX_TIME;
-float sound_speed= 800; //이걸 줄이면 카운트 속도가 빨라짐. 최대 1000
+float timer_speed= 800; //이걸 줄이면 카운트 속도가 빨라짐. 최대 1000
 //BGM을 재생할때는 원래 속도로 돌려놓는것 잊지말기.
 //#TODO: 전선 잘 짜르면 1000으로 올라가서 느리게 만드는것도 해보자.
 
@@ -38,9 +38,9 @@ void show_digit(int pos, int number){
   bool value, segment_value;
 #ifdef DEBUG
   String msg= "digit " + str(pos) + ": "; //세그먼트 작동 테스트용 메시지.
-  int = sleeptime;
-  Serial.print("sleep할 시간을 지정하세요");
-  sleeptime = Serial.parseInt()
+  int sleeptime;
+  Serial.print("sleep할 시간을 지정하세요(0~1000ms");
+  sleeptime = Serial.parseInt();
 #endif
   /*select a digit.*/
   for(int i = 0; i < 4; i++){
@@ -51,15 +51,15 @@ void show_digit(int pos, int number){
   for(int i = 0; i < 8; i++){
     segment_value = number_data[number][i];
     digitalWrite(segment_pins[i], segment_value); //anode의 경우 켜질때 1, 끌때 0
-#ifndef DEBUG //Debug모드가 아니라면 5ms 딜레이후 종료.
-  }
+#ifndef DEBUG .
+  }//Debug모드가 아니라면 5ms 딜레이후 종료
   delay(5);
   return;
 #else
     msg.append(segment_value);
   }
   Serial.println(msg);
-  delay(500);
+  delay(sleeptime);
 #endif
 }
 
@@ -80,7 +80,7 @@ void delay_countdown(int duration){
       show_digit(4, (int)second%10); // second 2nd digit
     }// 5ms * 4 routines = 20ms for one cycle. duration should be devides by that.
     
-    time_count -= duration/sound_speed;  // 재생한 노트 길이 만큼이 전체 시간에서 빼줌.
+    time_count -= duration/timer_speed;  // 재생한 노트 길이 만큼이 전체 시간에서 빼줌.
   }
 }
 

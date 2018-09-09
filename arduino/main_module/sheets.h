@@ -1,9 +1,10 @@
 /* sheets.h for music player via arduino tone 
- * author: fetiu, gomjellie, ez2max,geonmo...
+ * author: fetiu, gomjellie, ez2max, geonmo...
  * last change: 2018.9.9
  */
 #include"pitches.h"
-/*음표 구조체 선언*/
+
+//음표 구조체 선언
 struct note{ 
 int pitch; //음높이
 int tempo; //박자

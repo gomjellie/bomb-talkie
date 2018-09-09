@@ -8,6 +8,13 @@
 #include<Wire.h>
 #include"sheets.h"
 
+/* 악보 리스트 */
+extern const struct note airplane[];
+extern const struct note underworld[];
+extern const struct note final_fantasy[];
+extern const struct note sweep[];
+extern const struct note tiktok[];
+
 /*----사용할 모드만 남기고 주석처리 해주세요.----*/
 #define TIMER_MODE //0 이면 일반 delay
 //#define THREAD_MODE
@@ -16,7 +23,7 @@
 #ifdef TIMER_MODE
 #include"timer.h"
 extern float time_count;
-extern float sound_speed;
+extern float timer_speed;
 #endif
 /* 하드웨어 연결 정보 */
 /*for I2C*/
@@ -27,14 +34,6 @@ extern float sound_speed;
 #define PIEZO_PIN 10
 const int segment_pins[] = {2, 3, 4, 5, 6, 7, 8, 9};
 const int digit_pins[]  = {A0, 13, 12, 11};
-
-/* 악보 리스트 */
-extern const struct note airplane[];
-extern const struct note underworld[];
-extern const struct note final_fantasy[];
-extern const struct note sweep[];
-extern const struct note tiktok[];
-
 
 void setup() {
   pinMode(PIEZO_PIN,OUTPUT);
@@ -68,7 +67,7 @@ void play_music(note music[], int music_length){
     int dur = 1000 / music[i].tempo;        //한 박자를 tempo만큼 분할.
     tone(PIEZO_PIN, music[i].pitch, dur); //i번째 note의 음 높이로 재생
 #ifdef TIMER_MODE
-    float _dur = (dur * sound_speed)/MINUTE ; //딜레이를 줄여서 재생. 재생속도 빨라짐
+    float _dur = (dur * timer_speed)/MINUTE ; //딜레이를 줄여서 재생. 재생속도 빨라짐
     delay_countdown(_dur);
 #elif THREAD_MODE
     sleep(dur);
@@ -76,13 +75,13 @@ void play_music(note music[], int music_length){
     delay(dur);
 #endif
   }
-  sound_speed = analogRead(A1);
-  Serial.println(sound_speed);
 }
 
 void loop() {
   while(time_count > 0) {
+    timer_speed = analogRead(A1);
     play_music(tiktok, sizeof(tiktok) / sizeof(note));
+    Serial.println(timer_speed);
   }
   detach_sound();
   play_music(final_fantasy, sizeof(final_fantasy) / sizeof(note));
