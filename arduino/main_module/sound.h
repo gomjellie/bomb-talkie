@@ -9,8 +9,8 @@ extern const int PIEZO_PIN;
 
 /*음표 구조체 선언*/
 struct note {
-  prog_int16_t pitch; //음높이
-  prog_int16_t tempo; //박자
+  uint16_t PROGMEM pitch; //음높이
+  uint16_t PROGMEM tempo; //박자
 };
 
 /*효과음*/
