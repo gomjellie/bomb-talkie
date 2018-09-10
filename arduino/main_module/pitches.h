@@ -24,7 +24,7 @@
 #define G_2  98
 #define GS2 104
 #define A_2  110
-#define AS2 117
+#define AS_2 117
 #define B_2  123
 #define C_3  131
 #define CS3 139

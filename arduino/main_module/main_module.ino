@@ -39,7 +39,7 @@ void setup() {
     pinMode(segment_pins[i], OUTPUT);
   Serial.begin(9600);
   Wire.begin(); //MASTER. 
-  sound_play("attach");
+  sound_play(ATTACH);
 }
 
 void play_notes(const note *music, int music_length){
@@ -65,16 +65,16 @@ void loop() {
   while(time_count > 0) {
     timer_speed = analogRead(A1);
     Serial.println(timer_speed);
-    sound_play("tiktok");
+    sound_play(TIK_TOK);
     if(timer_speed == 1023){
         success = true;
-        sound_play("final_fantasy");
-        sound_play("detach");
+        sound_play(FINAL_FANTASY);
+        sound_play(DETACH);
         exit(0);
     }
   }
   timer_speed = 50;
-  for(int i=0; i<5; i++) sound_play("explode"); //it sounds like boom.
+  for(int i=0; i<5; i++) sound_play(EXPLODE); //it sounds like boom.
   exit(0);
 }
 
