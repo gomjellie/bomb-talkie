@@ -3,7 +3,6 @@
  * last change: 2018.9.9
  */
 #include"pitches.h"
-#include <avr/pgmspace.h>
 
 //"underworld", "final_fantasy", "sweep", "explode", "tiktok", "airplane", "attach", "detach"
 enum SongLists {
