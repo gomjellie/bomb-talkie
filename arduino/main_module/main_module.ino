@@ -14,6 +14,7 @@
 //#define DEBUG_MODE //디버그 모드로 전환하여 세그먼트 출력 값을 보려면 주석 해제.
 /*정상적으로 세그먼트를 보려면 DEBUG_MODE는 반드시 주석처리해야함.*/
 
+#include"pins.h"
 #include"sound.h"
 #ifdef TIMER_MODE
 #include"timer.h"
@@ -21,15 +22,6 @@ extern float time_count; //5 * 60 s
 extern float timer_speed;
 extern bool success;
 #endif
-/* 하드웨어 연결 정보 */
-/*for I2C*/
-#define SCL_PIN A5
-#define SDA_PIN A4
-//#define SLAVE_MODULE1 0x04
-/*for 4 digit 7 segment and timer*/
-const int PIEZO_PIN = 10;
-const int segment_pins[] = {2, 3, 4, 5, 6, 7, 8, 9};
-const int digit_pins[]  = {A0, 13, 12, 11};
 
 void setup() {
   pinMode(PIEZO_PIN,OUTPUT);
@@ -68,8 +60,8 @@ void loop() {
     sound_play(TIK_TOK);
     if(timer_speed == 1023){
         success = true;
-        sound_play(FINAL_FANTASY);
         sound_play(DETACH);
+        sound_play(FINAL_FANTASY);
         exit(0);
     }
   }

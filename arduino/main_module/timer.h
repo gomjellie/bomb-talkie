@@ -2,7 +2,9 @@
  * 카운트다운 타이머를 위한 라이브러리
  * author: fetiu
  * last change: 2018.9.9
- */ 
+ */  
+#include"pins.h"
+
 #define str String
 #define append concat //**주의**
 #define BUFF_SIZE 80 //for sprintf message
@@ -15,8 +17,6 @@ float timer_speed= 800; //이걸 줄이면 카운트 속도가 빨라짐. 최대
 //BGM을 재생할때는 원래 속도로 돌려놓는것 잊지말기.
 //#TODO: 전선 잘 짜르면 1000으로 올라가서 느리게 만드는것도 해보자.
 
-extern const int digit_pins[];// size 4
-extern const int segment_pins[]; //size 8
 
 /* segment표시 위한 배열 정의 */
 bool number_data[10][8]={

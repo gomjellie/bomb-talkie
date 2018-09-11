@@ -3,18 +3,18 @@
  * last change: 2018.9.9
  */
 #include"pitches.h"
+#include"pins.h"
 
 //"underworld", "final_fantasy", "sweep", "explode", "tiktok", "airplane", "attach", "detach"
-enum SongLists {
-    FINAL_FANTASY = 0,
-    SWEEP = 1,
-    EXPLODE = 2,
-    TIK_TOK = 3,
-    ATTACH = 4,
-    DETACH = 5,
+enum SongLists
+{
+    FINAL_FANTASY,
+    SWEEP,
+    EXPLODE,
+    TIK_TOK,
+    ATTACH,
+    DETACH,
 };
-
-extern const int PIEZO_PIN;
 
 /*음표 구조체 선언*/
 struct note {
@@ -57,32 +57,6 @@ void _explode() {
 //// it sounds like bomb explodes
 //// notes written by fetiu
   const struct note explode[] = {
-          {C_4, 8},{C_5, 8},
-          {A_3, 8},{A_4, 8},
-          {AS3, 8},{AS4, 8},
-          {0,4},{0,4},{0,4},
-
-          {C_4, 8},{C_5, 8},
-          {A_3, 8},{A_4, 8},
-          {AS3, 8},{AS4, 8},
-          {0,4},{0,4},{0,4},
-
-          {F_3, 8},{F_4, 8},
-          {D_3, 8},{D_4, 8},
-          {DS3, 8},{DS4, 8},
-          {0,4},{0,4},{0,4},
-
-          {F_3, 8},{F_4, 8},
-          {D_3, 8},{D_4, 8},
-          {DS3, 8},{DS4, 8},
-          {0,4},{0,4},{DS4,12},{D_4,12},{CS4,12},
-
-          {C_4, 8},{0, 8},
-          {DS4, 8},{0, 8},
-          {D_4, 8},{0, 8},
-          {GS3, 8},{0, 8},
-          {G_3,8},{0, 8},
-          {CS4, 8},{0,8},
 
           {C_4,12},{FS4,12},{F_4,12},{E_4,12},{AS4,12},{A_4,12},
           {GS4,6},{DS4,6},{B_3,6},
@@ -99,32 +73,6 @@ void _explode() {
           {C_4,12},{FS4,12},{F_4,12},{E_4,12},{AS4,12},{A_4,12},
           {C_4,12},{FS4,12},{F_4,12},{E_4,12},{AS4,12},{A_4,12},
 
-          {C_4, 8},{0, 8},
-          {DS4, 8},{0, 8},
-          {D_4, 8},{0, 8},
-          {GS3, 8},{0, 8},
-          {G_3,8},{0, 8},
-          {CS4, 8},{0,8},
-
-          {F_3, 8},{F_4, 8},
-          {D_3, 8},{D_4, 8},
-          {DS3, 8},{DS4, 8},
-          {0,4},{0,4},{DS4,12},{D_4,12},{CS4,12},
-
-          {F_3, 8},{F_4, 8},
-          {D_3, 8},{D_4, 8},
-          {DS3, 8},{DS4, 8},
-          {0,4},{0,4},{0,4},
-
-          {C_4, 8},{C_5, 8},
-          {A_3, 8},{A_4, 8},
-          {AS3, 8},{AS4, 8},
-          {0,4},{0,4},{0,4},
-
-          {C_4, 8},{C_5, 8},
-          {A_3, 8},{A_4, 8},
-          {AS3, 8},{AS4, 8},
-          {0,4},{0,4},{0,4},
   };
   int music_length = sizeof(explode) / sizeof(note);
   play_notes(explode, music_length);
