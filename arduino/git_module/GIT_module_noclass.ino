@@ -77,10 +77,14 @@ void Rbut_start() {
 
   while (true) {
     while (true) {
-      if (digitalRead(Bbut) == LOW) break;
+      if (digitalRead(Bbut) == LOW){ 
+       Off(Rled);
+       break;
+      }
       else if (digitalRead(Gbut) == LOW) Wrong();
       else if (digitalRead(Rbut) == LOW) Wrong();
       else if (digitalRead(Ybut) == LOW) Wrong();
+
 // 1차, 파랑버튼 누르기 완료     
     }
     Off(Rled); //빨강끄기
