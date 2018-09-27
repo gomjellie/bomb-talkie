@@ -1,0 +1,5 @@
+{
+    "board": "Intel:arc32:arduino_101",
+    "port": "/dev/cu.usbmodem14101",
+    "sketch": "arduino/git_module/GIT_module_noclass.ino"
+}
