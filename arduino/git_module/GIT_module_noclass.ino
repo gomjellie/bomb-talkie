@@ -11,31 +11,25 @@
 #define Ybut 3
 
 #define PBuzzer 2
+
 const long interval = 1000;
 unsigned long previousMillis = 0;
-unsigned long currentMillis = millis();
 int State = 0;
-
+int buttonpushed = 0;
 void setup() {
-  Serial.begin(9600);
-
   for (int i = 9; i < 13; i++)
     pinMode(i, OUTPUT);
-
-  pinMode(PBuzzer, OUTPUT);
-  noTone(PBuzzer);
-
   for (int i = 3; i < 7; i++)
     pinMode(i, INPUT);
-
+  pinMode(PBuzzer, OUTPUT);
+  noTone(PBuzzer);
   Wire.begin();
 }
 
 void Flash(int blinkLed) {
-
-  if (currentMillis - previousMillis >= interval) {
-
-
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis > interval) {
+    previousMillis = currentMillis;
     if (State == LOW) {
       State = HIGH;
       tone(PBuzzer, 250);
@@ -44,16 +38,12 @@ void Flash(int blinkLed) {
       noTone(PBuzzer);
     }
     digitalWrite(blinkLed, State);
-    digitalWrite(PBuzzer, State);
-    Serial.print(blinkLed);
-    Serial.println(" is working");
-    previousMillis = currentMillis;
-
   }
 }
 
 void Off(int led) {
   digitalWrite(led, LOW);
+  noTone(PBuzzer);
 }
 
 void Wrong() {
@@ -70,22 +60,54 @@ void Wrong() {
   delay(200);
   noTone(PBuzzer);
 }
-
 void Rbut_start() {
-  boolean switch1 = 0;
-  boolean switch2 = 0;
-
+  int stack = 0;
  while(true){
    Flash(Rled);//빨강버튼 반짝반짝
-   if (Bbut==0) break;
+   if (buttonpushed) {
+     if(Bbut==HIGH){
+       buttonpushed = 0;
+     }
+   } else{
+     if (Bbut==LOW){
+       buttonpushed = 1;
+       Off(Rled);
+       break;
+     }
    else if (Rbut == 0) {Wrong(); continue;}
    else if (Gbut == 0) {Wrong(); continue;}
    else if (Ybut == 0) {Wrong(); continue;}
+  }
  }
-//Off(Rled);
 
+ buttonpushed = 0;
+ delay(500);
+
+ while(true){
+   Flash(Yled);
+   Flash(Gled);
+   if (buttonpushed) {
+     if(Rbut==HIGH){
+       buttonpushed = 0;
+     }
+   } else{
+     if (Rbut==LOW){
+       buttonpushed = 1;
+       stack = 1;
+       if (stack = 1){
+        if (Gbut==LOW) {Off(Yled); Off(Gled); break;}
+        else if (Rbut == 0) {Wrong(); stack = 0; continue;}
+        else if (Bbut == 0) {Wrong(); stack = 0; continue;}
+        else if (Ybut == 0) {Wrong(); stack = 0; continue;}
+       }
+     }
+    }
+  }
+  tone(PBuzzer, 700);
+  delay(1000);
+  noTone(PBuzzer);
 }
 
 void loop() {
-  Rbut_start();
+  Rbut_start();//빨강버튼 반짝반짝
 }
