@@ -16,50 +16,83 @@ int SRbut;
 int SBbut;
 int SGbut;
 int SYbut;
-
-unsigned long targetMillis = 0;
-const long interval = 1000;
-unsigned long previousMillis = 0;
-int State = 0;
 int buttonpushed = 0;
 
-void setup() {
-  for (int i = 9; i < 13; i++){
-    pinMode(i, OUTPUT);
+
+class Flash //지속적인 깜빡임
+{
+  private:
+    int ledPin;
+    int Buzzer;
+    unsigned long targetMillis;
+    int ledState;
+    long OnTime;
+    long OffTime;
+    //const long interval = 1000;
+    unsigned long previousMillis;    
+    int State;
+    int shift;
+  //Millis()내장 함수를 이용하여 깜빡임 구현하기
+  // Constructor - creates a Flash
+  
+  // and initializes the member variables and state
+  public:
+  Flash(int led_pin, int buzzerTone);
+  void update(int time_delay, long on, long off);
+  void Off();
+};
+
+
+Flash::Flash(int led_pin, int buzzerTone){
+  ledPin = led_pin;
+  pinMode(ledPin, OUTPUT);
+  targetMillis =0;
+  State = LOW;
+  Buzzer = buzzerTone;
+}
+
+void Flash::update(int time_delay, long on, long off) {
+  OnTime = on;
+  OffTime = off;
+  shift = time_delay;
+long currentMillis = millis();
+currentMillis = currentMillis - shift;
+if((ledState == HIGH) && (currentMillis - previousMillis >= OnTime))
+    {
+      ledState = LOW;
+      previousMillis = currentMillis; 
+      digitalWrite(ledPin, ledState);
+      noTone(PBuzzer);
+    }
+else if ((ledState == LOW) && (currentMillis - previousMillis >= OffTime))
+    {
+      ledState = HIGH;
+      previousMillis = currentMillis; 
+      digitalWrite(ledPin, ledState); 
+      tone(PBuzzer, Buzzer);
+    }
   }
+
+void Flash::Off() {
+  digitalWrite(ledPin, LOW);
+  noTone(PBuzzer);
+}
+
+Flash R_led(Rled, 131); //빨강, C3
+Flash B_led(Bled, 165); //파랑, E3
+Flash Y_led(Yled, 196); //노랑. G3
+Flash G_led(Gled, 262); //초록, C4
+
+void setup() {
+ /* for (int i = 9; i < 13; i++){
+    pinMode(i, OUTPUT);
+  }*/
   for (int i = 3; i < 7; i++){
     pinMode(i, INPUT_PULLUP);
   }
   pinMode(PBuzzer, OUTPUT);
   noTone(PBuzzer);
   Wire.begin(7);
-}
-
-void Flash(int blinkLed) {
-  unsigned long currentMillis = millis();
-  if ( currentMillis >= targetMillis){
-    targetMillis = currentMillis + interval;
-    if (State == LOW) {
-      State = HIGH;
-      tone(PBuzzer, 250);
-    } else {
-      State = LOW;
-      noTone(PBuzzer);
-    }
-  }
-  else if (currentMillis < targetMillis) {
-    //previousMillis = currentMillis;
-    digitalWrite(blinkLed, State);
-  }
-}
-
-void Off(int led) {
-  digitalWrite(led, LOW);
-  noTone(PBuzzer);
-}
-
-void Correct(){
-  Wire.write('S');
 }
 
 void Wrong() {
@@ -77,12 +110,12 @@ void Wrong() {
   delay(200);
   noTone(PBuzzer);
 }
-
+/*
 void Rled_1() { //빨강 하나 반짝반짝 =>> 파란버튼 클릭
   while(buttonpushed == 0){
     updateSBut();
-    Flash(Rled);
-    if(SBbut == 0){Off(Rled); delay(10); buttonpushed = 1;}
+    R_led.update(0); //shift 0 millis
+    if(SBbut == 0){R_led.Off(); delay(10); buttonpushed = 1;}
     if(SRbut == 0 || SGbut ==0 || SYbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
     Wire.write(4);
     //else if(Gbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
@@ -94,17 +127,17 @@ void YGled_2() { //노랑, 초록 반짝반짝 =>> 빨강 초록 클릭
   int stack = 0;
   while(buttonpushed == 0){
     updateSBut();
-    Flash(Yled);
-    Flash(Gled);
+    Y_led.update(0);
+    G_led.update();
      if (SRbut == 0){stack = 1;}
      if (SBbut == 0 || SGbut ==0 || SYbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
      if (stack == 1){
-       if (SGbut == 0){Off(Yled); Off(Gled); delay(10); Correct(); buttonpushed = 1;}
+       if (SGbut == 0){Y_led.Off(); G_led.Off(); delay(10); buttonpushed = 1;}
        if (SBbut == 0 || SRbut ==0 || SYbut == 0){Wrong(); delay(10); buttonpushed = 0; stack = 0; continue;}
      }
   }
 }
- 
+ */
 void updateSBut(){
   SRbut = digitalRead(Rbut);
   SBbut = digitalRead(Bbut);
@@ -113,7 +146,9 @@ void updateSBut(){
 }
   
 void loop() {
- Rled_1();
+  R_led.update(0, 500, 4500);
+  G_led.update(500,500, 4500);
+ /*Rled_1();
  delay(500);
- YGled_2();
+ YGled_2();*/
 }
