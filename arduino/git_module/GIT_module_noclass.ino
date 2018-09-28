@@ -17,6 +17,7 @@ int SBbut;
 int SGbut;
 int SYbut;
 
+unsigned long targetMillis = 0;
 const long interval = 1000;
 unsigned long previousMillis = 0;
 int State = 0;
@@ -32,13 +33,12 @@ void setup() {
   pinMode(PBuzzer, OUTPUT);
   noTone(PBuzzer);
   Wire.begin(7);
-  Serial.begin(9600);
 }
 
 void Flash(int blinkLed) {
   unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis > interval) {
-    previousMillis = currentMillis;
+  if ( currentMillis >= targetMillis){
+    targetMillis = currentMillis + interval;
     if (State == LOW) {
       State = HIGH;
       tone(PBuzzer, 250);
@@ -46,9 +46,10 @@ void Flash(int blinkLed) {
       State = LOW;
       noTone(PBuzzer);
     }
+  }
+  else if (currentMillis < targetMillis) {
+    //previousMillis = currentMillis;
     digitalWrite(blinkLed, State);
-    Serial.print(State);
-    Serial.println(": State");
   }
 }
 
@@ -64,7 +65,6 @@ void Correct(){
 void Wrong() {
   //신호 보낼 것@!@!@!@
   Wire.write('F');
-  Serial.println('F');
   tone(PBuzzer, 500);
   delay(200);
   noTone(PBuzzer);
@@ -82,7 +82,7 @@ void Rled_1() { //빨강 하나 반짝반짝 =>> 파란버튼 클릭
   while(buttonpushed == 0){
     updateSBut();
     Flash(Rled);
-    if(SBbut == 0){Off(Rled); delay(10); Serial.println('Correct'); buttonpushed = 1;}
+    if(SBbut == 0){Off(Rled); delay(10); buttonpushed = 1;}
     if(SRbut == 0 || SGbut ==0 || SYbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
     Wire.write(4);
     //else if(Gbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
@@ -93,7 +93,7 @@ void Rled_1() { //빨강 하나 반짝반짝 =>> 파란버튼 클릭
 void YGled_2() { //노랑, 초록 반짝반짝 =>> 빨강 초록 클릭
   int stack = 0;
   while(buttonpushed == 0){
-    updateSBut()0.;
+    updateSBut();
     Flash(Yled);
     Flash(Gled);
      if (SRbut == 0){stack = 1;}
@@ -103,7 +103,6 @@ void YGled_2() { //노랑, 초록 반짝반짝 =>> 빨강 초록 클릭
        if (SBbut == 0 || SRbut ==0 || SYbut == 0){Wrong(); delay(10); buttonpushed = 0; stack = 0; continue;}
      }
   }
-
 }
  
 void updateSBut(){
