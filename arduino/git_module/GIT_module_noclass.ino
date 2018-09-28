@@ -12,18 +12,26 @@
 
 #define PBuzzer 2
 
+int SRbut = digitalRead(Rbut);
+int SBbut = digitalRead(Bbut);
+int SGbut = digitalRead(Gbut);
+int SYbut = digitalRead(Ybut);
+
 const long interval = 1000;
 unsigned long previousMillis = 0;
 int State = 0;
 int buttonpushed = 0;
+
 void setup() {
-  for (int i = 9; i < 13; i++)
+  for (int i = 9; i < 13; i++){
     pinMode(i, OUTPUT);
-  for (int i = 3; i < 7; i++)
-    pinMode(i, INPUT);
+  }
+  for (int i = 3; i < 7; i++){
+    pinMode(i, INPUT_PULLUP);
+  }
   pinMode(PBuzzer, OUTPUT);
   noTone(PBuzzer);
-  Wire.begin();
+  Wire.begin(7);
 }
 
 void Flash(int blinkLed) {
@@ -46,8 +54,13 @@ void Off(int led) {
   noTone(PBuzzer);
 }
 
+void Correct(){
+  Wire.send('S');
+}
+
 void Wrong() {
   //신호 보낼 것@!@!@!@
+  Wire.send('F');
   tone(PBuzzer, 500);
   delay(200);
   noTone(PBuzzer);
@@ -60,54 +73,38 @@ void Wrong() {
   delay(200);
   noTone(PBuzzer);
 }
-void Rbut_start() {
+
+void Rled_1() { //빨강 하나 반짝반짝 =>> 파란버튼 클릭
+  while(buttonpushed == 0){
+    Flash(Rled);
+    if(Bbut == 0){Off(Rled); delay(10); Correct(); buttonpushed = 1;}
+    if(Rbut == 0 || Gbut ==0 || Ybut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
+    //else if(Gbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
+    //else if(Ybut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
+  }
+  buttonpushed = 0;
+}
+void YGled_2() { //노랑, 초록 반짝반짝 =>> 빨강 초록 클릭
   int stack = 0;
- while(true){
-   Flash(Rled);//빨강버튼 반짝반짝
-   if (buttonpushed) {
-     if(Bbut==HIGH){
-       buttonpushed = 0;
+  while(buttonpushed == 0){
+    Flash(Yled);
+    Flash(Gled);
+     if (Rbut == 0){stack = 1;}
+     if (Bbut == 0 || Gbut ==0 || Ybut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
+     if (stack == 1){
+       if (Gbut == 0){Off(Yled); Off(Gled); delay(10); Correct(); buttonpushed = 1;}
+       if (Bbut == 0 || Rbut ==0 || Ybut == 0){Wrong(); delay(10); buttonpushed = 0; stack = 0; continue;}
      }
-   } else{
-     if (Bbut==LOW){
-       buttonpushed = 1;
-       Off(Rled);
-       break;
-     }
-   else if (Rbut == 0) {Wrong(); continue;}
-   else if (Gbut == 0) {Wrong(); continue;}
-   else if (Ybut == 0) {Wrong(); continue;}
   }
- }
+}
 
- buttonpushed = 0;
- delay(500);
-
- while(true){
-   Flash(Yled);
-   Flash(Gled);
-   if (buttonpushed) {
-     if(Rbut==HIGH){
-       buttonpushed = 0;
-     }
-   } else{
-     if (Rbut==LOW){
-       buttonpushed = 1;
-       stack = 1;
-       if (stack = 1){
-        if (Gbut==LOW) {Off(Yled); Off(Gled); break;}
-        else if (Rbut == 0) {Wrong(); stack = 0; continue;}
-        else if (Bbut == 0) {Wrong(); stack = 0; continue;}
-        else if (Ybut == 0) {Wrong(); stack = 0; continue;}
-       }
-     }
-    }
-  }
-  tone(PBuzzer, 700);
-  delay(1000);
-  noTone(PBuzzer);
+void BYRled_3() { // 파랑 노랑 빨강 반짝반짝 =>> 노랑 초록 빨강 클릭
+int stack_1
 }
 
 void loop() {
-  Rbut_start();//빨강버튼 반짝반짝
+ Rled_1();
+ delay(500);
+ YGled_2();
+
 }
