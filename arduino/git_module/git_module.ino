@@ -38,44 +38,64 @@ void on_start() {
 }
 
 void on_button_button_clicked() {
-//  digitalWrite();
-}
-
-void get_clicked_btn() {
-  if (button_stat[Rbut] == 0 | button_stat[Gbut] == 0 | button_stat[Ybut] == 0 | button_stat[Bbut] == 0) {
-    button_stat[Bbut] = 1;
-  } else {
-    button_stat[Bbut] = digitalRead(Bbut);
-  }
-  button_stat[Rbut] = digitalRead(Rbut);
-  button_stat[Gbut] = digitalRead(Gbut);
-  button_stat[Ybut] = digitalRead(Ybut);
-  Serial.println(digitalRead(Bbut));
-
-  if (button_stat[Rbut] == 0 | button_stat[Gbut] == 0 | button_stat[Ybut] == 0) {
-    button_stat[Bbut] = 1;
-  }
-
   if (!button_stat[Rbut]) {
+    while (!button_stat[Rbut]) {
+      digitalWrite(Rled, LOW);
+      get_clicked_btn();
+    }
     Serial.println("Rbut pressed");
   }
-
-//  if (button_stat[Bbut]) {
-//    Serial.println("Bbut pressed");
-//  }
+  if (button_stat[Bbut]) {
+    // blue button doesn't work
+  }
   if (!button_stat[Gbut]) {
+    while (!button_stat[Gbut]) {
+      digitalWrite(Gled, LOW);
+      get_clicked_btn();
+    }
     Serial.println("Gbut pressed");
   }
   if (!button_stat[Ybut]) {
+    while (!button_stat[Ybut]) {
+      digitalWrite(Yled, LOW);
+      get_clicked_btn();
+    }
     Serial.println("Ybut pressed");
   }
+}
+
+void on_yellow_clicked() {
+
+}
+
+void on_green_clicked() {
+
+}
+
+void on_yellow_clicked() {
+
+}
+
+void get_clicked_btn() {
+//  if (button_stat[Rbut] == 0 | button_stat[Gbut] == 0 | button_stat[Ybut] == 0 | button_stat[Bbut] == 0) {
+//    button_stat[Bbut] = 1;
+//  } else {
+//    button_stat[Bbut] = digitalRead(Bbut);
+//  }
+  button_stat[Rbut] = digitalRead(Rbut);
+  button_stat[Gbut] = digitalRead(Gbut);
+  button_stat[Ybut] = digitalRead(Ybut);
+
+//  if (button_stat[Rbut] == 0 | button_stat[Gbut] == 0 | button_stat[Ybut] == 0) {
+//    button_stat[Bbut] = 1;
+//  }
+
+
 }
 
 void loop(){
   on_start();
   get_clicked_btn();
-
   on_button_button_clicked();
-
   delay(100);
 }
