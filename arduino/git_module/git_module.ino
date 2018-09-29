@@ -33,6 +33,8 @@ void on_yellow_clicked();
 void update_button_stat();
 int check_ans();
 void loop();
+void blink_led(int led_pin, int milliseconds);
+void show_hint();
 
 void setup(){
   pinMode(Rled, OUTPUT);
@@ -89,8 +91,7 @@ void on_button_clicked() {
 void on_red_clicked() {
   Serial.println("Red pressed");
   stacks += Rbut * pow(10, final_stage-idx);
-  Serial.println(Rbut * pow(10, final_stage-idx));
-  Serial.println("added");
+  Serial.print(Rbut * pow(10, final_stage-idx)); Serial.println("added");
   Serial.print("stack :"); Serial.println(stacks);
   idx++;
 }
@@ -98,8 +99,7 @@ void on_red_clicked() {
 void on_green_clicked() {
   Serial.println("Green pressed");
   stacks += Gbut * pow(10, final_stage-idx);
-  Serial.println(Gbut * pow(10, final_stage-idx));
-  Serial.println("added");
+  Serial.print(Gbut * pow(10, final_stage-idx)); Serial.println("added");
   Serial.print("stack :"); Serial.println(stacks);
   idx++;
 }
@@ -107,8 +107,7 @@ void on_green_clicked() {
 void on_yellow_clicked() {
   Serial.println("Yellow pressed");
   stacks += Ybut * pow(10, final_stage-idx);
-  Serial.println(Ybut * pow(10, final_stage-idx));
-  Serial.println("added");
+  Serial.print(Ybut * pow(10, final_stage-idx)); Serial.println("added");
   Serial.print("stack :"); Serial.println(stacks);
   idx++;
 }
@@ -157,33 +156,28 @@ void show_hint() {
     Serial.print("button_color :"); Serial.println(button_color);
     switch (button_color) {
       case Rbut:
-        digitalWrite(Rled, LOW);
-        delay(200);
-        digitalWrite(Rled, HIGH);
-        delay(200);
+        blink_led(Rled, 200);
         break;
       case Bbut:
-        digitalWrite(Bled, LOW);
-        delay(200);
-        digitalWrite(Bled, HIGH);
-        delay(200);
+        blink_led(Bled, 200);
         break;
       case Gbut:
-        digitalWrite(Gled, LOW);
-        delay(200);
-        digitalWrite(Gled, HIGH);
-        delay(200);
+        blink_led(Gled, 200);
         break;
       case Ybut:
-        digitalWrite(Yled, LOW);
-        delay(200);
-        digitalWrite(Yled, HIGH);
-        delay(200);
+        blink_led(Yled, 200);
         break;
       default:
         break;
     }
   }
+}
+
+void blink_led(int led_pin, int milliseconds) {
+  digitalWrite(led_pin, LOW);
+  delay(milliseconds);
+  digitalWrite(led_pin, HIGH);
+  delay(milliseconds);
 }
 
 bool key_input_finished = false;
@@ -203,14 +197,12 @@ void loop() {
         break;
       case 0:
         key_input_finished = true;
-        Serial.println("idx is full but wrong..... setting idx = 0");
         stacks = 1;
         idx = 0;
         break;
       case 1:
         key_input_finished = true;
-        Serial.print("right answer! stage: ");
-        Serial.println(stage);
+        Serial.print("right answer! stage: "); Serial.println(stage);
         stacks = 1;
         idx = 0;
         stage++;
@@ -225,6 +217,14 @@ void loop() {
   }
 
   if (stage == 3) {
+    blink_led(Bled, 200);
+    blink_led(Rled, 200);
+    blink_led(Gled, 200);
+    blink_led(Yled, 200);
+    blink_led(Bled, 200);
+    blink_led(Yled, 200);
+    blink_led(Gled, 200);
+    blink_led(Rled, 200);
     exit(0);
   }
 }
