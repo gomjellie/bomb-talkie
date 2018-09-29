@@ -30,6 +30,8 @@ void on_button_clicked();
 void on_red_clicked();
 void on_green_clicked();
 void on_yellow_clicked();
+void update_button_stat();
+int check_ans();
 void loop();
 
 void setup(){
@@ -60,6 +62,7 @@ void on_button_clicked() {
       digitalWrite(Rled, LOW);
       update_button_stat();
     }
+    digitalWrite(Rled, HIGH);
     on_red_clicked();
   }
   if (button_stat[Bbut]) {
@@ -70,6 +73,7 @@ void on_button_clicked() {
       digitalWrite(Gled, LOW);
       update_button_stat();
     }
+    digitalWrite(Gled, HIGH);
     on_green_clicked();
   }
   if (!button_stat[Ybut]) {
@@ -77,6 +81,7 @@ void on_button_clicked() {
       digitalWrite(Yled, LOW);
       update_button_stat();
     }
+    digitalWrite(Yled, HIGH);
     on_yellow_clicked();
   }
 }
@@ -123,7 +128,7 @@ int check_ans() {
    */
   if (idx-1 != stage) {
     if (idx-1 > stage) {
-      Serial.print("idx :");Serial.print(idx); Serial.print(" stage: "); Serial.print(stage);
+      Serial.print("WTF!!!!!!!!!!! idx :");Serial.print(idx); Serial.print(" stage: "); Serial.println(stage);
       // 발생하면 안되는 상황이지만 혹시 모르니 처리해둠
       return 2;
     }
@@ -135,33 +140,91 @@ int check_ans() {
   return 0;
 }
 
+int lenHelper(unsigned x) {
+  if      (x >= 10000)  return 4;
+  else if (x >= 1000)   return 3;
+  else if (x >= 100)    return 2;
+  else if (x >= 10)     return 1;
+  return 0;
+}
+
+void showHint() {
+  int hint = ans[stage] / pow(10, final_stage - stage);
+  Serial.print("hint :"); Serial.println(hint);
+  int len = lenHelper(hint);
+  for (int i = len; i >= 0; i--) {
+    int button_color = int(hint / pow(10, i)) % int(10);
+    Serial.print("button_color :"); Serial.println(button_color);
+    switch (button_color) {
+      case Rbut:
+        digitalWrite(Rled, LOW);
+        delay(200);
+        digitalWrite(Rled, HIGH);
+        delay(200);
+        break;
+      case Bbut:
+        digitalWrite(Bled, LOW);
+        delay(200);
+        digitalWrite(Bled, HIGH);
+        delay(200);
+        break;
+      case Gbut:
+        digitalWrite(Gled, LOW);
+        delay(200);
+        digitalWrite(Gled, HIGH);
+        delay(200);
+        break;
+      case Ybut:
+        digitalWrite(Yled, LOW);
+        delay(200);
+        digitalWrite(Yled, HIGH);
+        delay(200);
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+bool key_input_finished = false;
+
 void loop() {
   on_start();
-  update_button_stat();
-  on_button_clicked();
-  int progress_status = check_ans();
+  showHint();
 
-  switch (progress_status) {
-    case -1:
-      Serial.println("idx not reached");
-      break;
-    case 0:
-      Serial.println("idx is full but wrong..... setting idx = 0");
-      stacks = 1;
-      idx = 0;
-      break;
-    case 1:
-      Serial.print("right answer! stage: "); Serial.print(stage);
-      stacks = 1;
-      idx = 0;
-      stage++;
-      break;
-    default:
-      break;
+  key_input_finished = false;
+  while (!key_input_finished) {
+    update_button_stat();
+    on_button_clicked();
+    int progress_status = check_ans();
+
+    switch (progress_status) {
+      case -1:
+        break;
+      case 0:
+        key_input_finished = true;
+        Serial.println("idx is full but wrong..... setting idx = 0");
+        stacks = 1;
+        idx = 0;
+        break;
+      case 1:
+        key_input_finished = true;
+        Serial.print("right answer! stage: ");
+        Serial.println(stage);
+        stacks = 1;
+        idx = 0;
+        stage++;
+        break;
+      default:
+        // on error
+        stacks = 1;
+        idx = 0;
+        break;
+    }
+    delay(100);
   }
 
   if (stage == 3) {
     exit(0);
   }
-  delay(100);
 }
