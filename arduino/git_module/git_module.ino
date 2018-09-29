@@ -140,7 +140,7 @@ int check_ans() {
   return 0;
 }
 
-int lenHelper(unsigned x) {
+int len_helper(unsigned x) {
   if      (x >= 10000)  return 4;
   else if (x >= 1000)   return 3;
   else if (x >= 100)    return 2;
@@ -148,10 +148,10 @@ int lenHelper(unsigned x) {
   return 0;
 }
 
-void showHint() {
+void show_hint() {
   int hint = ans[stage] / pow(10, final_stage - stage);
   Serial.print("hint :"); Serial.println(hint);
-  int len = lenHelper(hint);
+  int len = len_helper(hint);
   for (int i = len; i >= 0; i--) {
     int button_color = int(hint / pow(10, i)) % int(10);
     Serial.print("button_color :"); Serial.println(button_color);
@@ -190,7 +190,7 @@ bool key_input_finished = false;
 
 void loop() {
   on_start();
-  showHint();
+  show_hint();
 
   key_input_finished = false;
   while (!key_input_finished) {
