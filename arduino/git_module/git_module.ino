@@ -217,14 +217,12 @@ void loop() {
   }
 
   if (stage == 3) {
-    blink_led(Bled, 200);
-    blink_led(Rled, 200);
-    blink_led(Gled, 200);
-    blink_led(Yled, 200);
-    blink_led(Bled, 200);
-    blink_led(Yled, 200);
-    blink_led(Gled, 200);
-    blink_led(Rled, 200);
+    for (int i = 20; i > 0; i--) {
+      blink_led(Bled, i * 2);
+      blink_led(Rled, i * 2);
+      blink_led(Gled, i * 2);
+      blink_led(Yled, i * 2);
+    }
     exit(0);
   }
 }
