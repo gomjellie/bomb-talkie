@@ -1,120 +1,81 @@
 #include "Wire.h"
 
-#define Rled 12
+#define Rled 10
 #define Bled 11
-#define Gled 10
+#define Gled 12 // todo : 12 번 납땜 접촉불량 해결
 #define Yled 9
 
-#define Rbut 6
-#define Bbut 5
+#define Rbut 7
+#define Bbut 6 // blue button 연결된 초록색선 선문제인지 버튼 문제인지 모르겠음 일단 파란 버튼 제외하고 만듬
 #define Gbut 4
 #define Ybut 3
 
 #define PBuzzer 2
 
-int SRbut;
-int SBbut;
-int SGbut;
-int SYbut;
+int button_stat[8] = {0, };
 
-const long interval = 1000;
-unsigned long previousMillis = 0;
-int State = 0;
-int buttonpushed = 0;
+void setup(){
+  pinMode(Rled, OUTPUT);
+  pinMode(Gled, OUTPUT);
+  pinMode(Bled, OUTPUT);
+  pinMode(Yled, OUTPUT);
 
-void setup() {
-  for (int i = 9; i < 13; i++){
-    pinMode(i, OUTPUT);
-  }
-  for (int i = 3; i < 7; i++){
-    pinMode(i, INPUT_PULLUP);
-  }
-  pinMode(PBuzzer, OUTPUT);
-  noTone(PBuzzer);
-  Wire.begin(7);
+  pinMode(Rbut, INPUT_PULLUP);
+  pinMode(Gbut, INPUT_PULLUP);
+  pinMode(Gbut, INPUT_PULLUP);
+  pinMode(Ybut, INPUT_PULLUP);
+
+//  randNumber = random(3);
   Serial.begin(9600);
+  // Wire.begin(77);
 }
 
-void Flash(int blinkLed) {
-  unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis > interval) {
-    previousMillis = currentMillis;
-    if (State == LOW) {
-      State = HIGH;
-      tone(PBuzzer, 250);
-    } else {
-      State = LOW;
-      noTone(PBuzzer);
-    }
-    digitalWrite(blinkLed, State);
-    Serial.print(State);
-    Serial.println(": State");
+void on_start() {
+  digitalWrite(Rled, HIGH);
+  digitalWrite(Gled, HIGH);
+  digitalWrite(Bled, HIGH);
+  digitalWrite(Yled, HIGH);
+}
+
+void on_button_button_clicked() {
+//  digitalWrite();
+}
+
+void get_clicked_btn() {
+  if (button_stat[Rbut] == 0 | button_stat[Gbut] == 0 | button_stat[Ybut] == 0 | button_stat[Bbut] == 0) {
+    button_stat[Bbut] = 1;
+  } else {
+    button_stat[Bbut] = digitalRead(Bbut);
+  }
+  button_stat[Rbut] = digitalRead(Rbut);
+  button_stat[Gbut] = digitalRead(Gbut);
+  button_stat[Ybut] = digitalRead(Ybut);
+  Serial.println(digitalRead(Bbut));
+
+  if (button_stat[Rbut] == 0 | button_stat[Gbut] == 0 | button_stat[Ybut] == 0) {
+    button_stat[Bbut] = 1;
+  }
+
+  if (!button_stat[Rbut]) {
+    Serial.println("Rbut pressed");
+  }
+
+//  if (button_stat[Bbut]) {
+//    Serial.println("Bbut pressed");
+//  }
+  if (!button_stat[Gbut]) {
+    Serial.println("Gbut pressed");
+  }
+  if (!button_stat[Ybut]) {
+    Serial.println("Ybut pressed");
   }
 }
 
-void Off(int led) {
-  digitalWrite(led, LOW);
-  noTone(PBuzzer);
-}
+void loop(){
+  on_start();
+  get_clicked_btn();
 
-void Correct(){
-  Wire.write('S');
-}
+  on_button_button_clicked();
 
-void Wrong() {
-  //신호 보낼 것@!@!@!@
-  Wire.write('F');
-  Serial.println('F');
-  tone(PBuzzer, 500);
-  delay(200);
-  noTone(PBuzzer);
-  delay(200);
-  tone(PBuzzer, 500);
-  delay(200);
-  noTone(PBuzzer);
-  delay(200);
-  tone(PBuzzer, 500);
-  delay(200);
-  noTone(PBuzzer);
-}
-
-void Rled_1() { //빨강 하나 반짝반짝 =>> 파란버튼 클릭
-  while(buttonpushed == 0){
-    updateSBut();
-    Flash(Rled);
-    if(SBbut == 0){Off(Rled); delay(10); Serial.println('Correct'); buttonpushed = 1;}
-    if(SRbut == 0 || SGbut ==0 || SYbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
-    Wire.write(4);
-    //else if(Gbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
-    //else if(Ybut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
-  }
-  buttonpushed = 0;
-}
-void YGled_2() { //노랑, 초록 반짝반짝 =>> 빨강 초록 클릭
-  int stack = 0;
-  while(buttonpushed == 0){
-    updateSBut()0.;
-    Flash(Yled);
-    Flash(Gled);
-     if (SRbut == 0){stack = 1;}
-     if (SBbut == 0 || SGbut ==0 || SYbut == 0){Wrong(); delay(10); buttonpushed = 0; continue;}
-     if (stack == 1){
-       if (SGbut == 0){Off(Yled); Off(Gled); delay(10); Correct(); buttonpushed = 1;}
-       if (SBbut == 0 || SRbut ==0 || SYbut == 0){Wrong(); delay(10); buttonpushed = 0; stack = 0; continue;}
-     }
-  }
-
-}
- 
-void updateSBut(){
-  SRbut = digitalRead(Rbut);
-  SBbut = digitalRead(Bbut);
-  SGbut = digitalRead(Gbut);
-  SYbut = digitalRead(Ybut);
-}
-  
-void loop() {
- Rled_1();
- delay(500);
- YGled_2();
+  delay(100);
 }
