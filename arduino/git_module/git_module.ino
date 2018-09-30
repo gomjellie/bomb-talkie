@@ -17,6 +17,13 @@
 #define STAT_LED_GREEN_PORT 16 // A2
 #define STAT_LED_RED_PORT  17 // A3
 
+#define FAIL -1
+#define NORMAL 0
+#define SUCCESS 1
+
+int bombState = NORMAL; //해당 모듈의 해제 성공 여부.
+//loop 구간에서 이 변수값을 성공 여부에 따라 0, 1, -1 등의 값으로 설정해주는것을 권장
+
 int button_stat[8] = {0, };
 int stacks = 1; // 왠진 모르겠는데 1을 더해야 맞는다...... 0 + 7000 이 처음에 6999로 저장되서 그냥 시작을 1로 함
 int idx = 0;
@@ -51,6 +58,7 @@ int check_ans();
 void loop();
 void blink_led(int led_pin, int milliseconds);
 void show_hint();
+void bombState_send();
 
 void setup(){
   pinMode(RED_LED_PORT, OUTPUT);
@@ -70,6 +78,21 @@ void setup(){
   Serial.begin(9600);
   // Wire.begin(77);
 }
+
+
+void bombState_send() {
+  if(bombState == SUCCESS){ //해제에 성공 했을 때
+    Wire.write('S');
+  }
+  else if(bombState == NORMAL){
+    Wire.write('N'); //아직 해제하지 못했을 때. 대기상태
+  }
+  else if(bombState == FAIL){ //해제 도중 실수를 했을때(실패했을 때)
+    Wire.write('F');
+    bombState = NORMAL; //실패 정보가 한번 전송된 이후엔 다시 IDLE로 전환
+  }
+}
+
 
 void on_start() {
   digitalWrite(RED_LED_PORT, HIGH);
@@ -266,6 +289,7 @@ void loop() {
   }
 
   if (stage == 3) {
+    bombState = SUCCESS;
     for (int i = 20; i > 0; i--) {
       blink_led(BLUE_LED_PORT, i * 2);
       blink_led(RED_LED_PORT, i * 2);
@@ -283,5 +307,9 @@ void loop() {
     digitalWrite(STAT_LED_GREEN_PORT, HIGH);
     delay(100);
     exit(0);
+  } else if (stage > 3) {
+    bombState = FAIL;
+  } else {
+    bombState = NORMAL;
   }
 }
