@@ -76,9 +76,10 @@ void setup(){
   pinMode(STAT_LED_RED_PORT, OUTPUT);
 
   Serial.begin(9600);
+  Wire.begin(7);
   Wire.onRequest(bombState_send);
 
-  // Wire.begin(77);
+
 }
 
 
