@@ -109,9 +109,9 @@ void on_start() {
       digitalWrite(STAT_LED_BLUE_PORT, LOW);
       break;
     case 1:
-      digitalWrite(STAT_LED_RED_PORT, LOW);
-      digitalWrite(STAT_LED_GREEN_PORT, HIGH);
-      digitalWrite(STAT_LED_BLUE_PORT, HIGH);
+      digitalWrite(STAT_LED_RED_PORT, HIGH);
+      digitalWrite(STAT_LED_GREEN_PORT, LOW);
+      digitalWrite(STAT_LED_BLUE_PORT, LOW);
       break;
     case 2:
       digitalWrite(STAT_LED_RED_PORT, LOW);
@@ -119,9 +119,9 @@ void on_start() {
       digitalWrite(STAT_LED_BLUE_PORT, HIGH);
       break;
     case 3:
-      digitalWrite(STAT_LED_RED_PORT, HIGH);
-      digitalWrite(STAT_LED_GREEN_PORT, LOW);
-      digitalWrite(STAT_LED_BLUE_PORT, LOW);
+      digitalWrite(STAT_LED_RED_PORT, LOW);
+      digitalWrite(STAT_LED_GREEN_PORT, HIGH);
+      digitalWrite(STAT_LED_BLUE_PORT, HIGH);
       break;
   }
 }
