@@ -76,6 +76,8 @@ void setup(){
   pinMode(STAT_LED_RED_PORT, OUTPUT);
 
   Serial.begin(9600);
+  Wire.onRequest(bombState_send);
+
   // Wire.begin(77);
 }
 
@@ -108,8 +110,8 @@ void on_start() {
       break;
     case 1:
       digitalWrite(STAT_LED_RED_PORT, LOW);
-      digitalWrite(STAT_LED_GREEN_PORT, HIGH);
-      digitalWrite(STAT_LED_BLUE_PORT, LOW);
+      analogWrite(STAT_LED_GREEN_PORT, 150);
+      digitalWrite(STAT_LED_BLUE_PORT, HIGH);
       break;
     case 2:
       digitalWrite(STAT_LED_RED_PORT, LOW);
@@ -127,10 +129,10 @@ void on_start() {
 void on_button_clicked() {
   if (!button_stat[RED_BUTTON_PORT]) {
     while (!button_stat[RED_BUTTON_PORT]) {
-      digitalWrite(RED_LED_PORT, LOW);
+      digitalWrite(RED_LED_PORT, HIGH);
       update_button_stat();
     }
-    digitalWrite(RED_LED_PORT, HIGH);
+    digitalWrite(RED_LED_PORT, LOW);
     on_red_clicked();
   }
   if (button_stat[BLUE_BUTTON_PORT]) {
@@ -138,18 +140,18 @@ void on_button_clicked() {
   }
   if (!button_stat[GREEN_BUTTON_PORT]) {
     while (!button_stat[GREEN_BUTTON_PORT]) {
-      digitalWrite(GREEN_LED_PORT, LOW);
+      digitalWrite(GREEN_LED_PORT, HIGH);
       update_button_stat();
     }
-    digitalWrite(GREEN_LED_PORT, HIGH);
+    digitalWrite(GREEN_LED_PORT, LOW);
     on_green_clicked();
   }
   if (!button_stat[YELLOW_BUTTON_PORT]) {
     while (!button_stat[YELLOW_BUTTON_PORT]) {
-      digitalWrite(YELLOW_LED_PORT, LOW);
+      digitalWrite(YELLOW_LED_PORT, HIGH);
       update_button_stat();
     }
-    digitalWrite(YELLOW_LED_PORT, HIGH);
+    digitalWrite(YELLOW_LED_PORT, LOW);
     on_yellow_clicked();
   }
 }
@@ -214,10 +216,10 @@ int len_helper(unsigned x) {
 }
 
 void show_hint() {
-  digitalWrite(RED_LED_PORT, HIGH);
-  digitalWrite(YELLOW_LED_PORT, HIGH);
-  digitalWrite(GREEN_LED_PORT, HIGH);
-  digitalWrite(BLUE_LED_PORT, HIGH);
+  digitalWrite(RED_LED_PORT, LOW);
+  digitalWrite(YELLOW_LED_PORT, LOW);
+  digitalWrite(GREEN_LED_PORT, LOW);
+  digitalWrite(BLUE_LED_PORT, LOW);
   delay(200);
   int hint = ans[stage] / pow(10, final_stage - stage);
   Serial.print("hint :"); Serial.println(hint);
@@ -227,16 +229,16 @@ void show_hint() {
     Serial.print("button_color :"); Serial.println(button_color);
     switch (button_color) {
       case RED_BUTTON_PORT:
-        blink_led(RED_LED_PORT, 200);
+        blink_led(RED_LED_PORT, 300);
         break;
       case BLUE_BUTTON_PORT:
-        blink_led(BLUE_LED_PORT, 200);
+        blink_led(BLUE_LED_PORT, 300);
         break;
       case GREEN_BUTTON_PORT:
-        blink_led(GREEN_LED_PORT, 200);
+        blink_led(GREEN_LED_PORT, 300);
         break;
       case YELLOW_BUTTON_PORT:
-        blink_led(YELLOW_LED_PORT, 200);
+        blink_led(YELLOW_LED_PORT, 300);
         break;
       default:
         break;
@@ -245,9 +247,9 @@ void show_hint() {
 }
 
 void blink_led(int led_pin, int milliseconds) {
-  digitalWrite(led_pin, LOW);
-  delay(milliseconds);
   digitalWrite(led_pin, HIGH);
+  delay(milliseconds);
+  digitalWrite(led_pin, LOW);
   delay(milliseconds);
 }
 
@@ -296,16 +298,17 @@ void loop() {
       blink_led(GREEN_LED_PORT, i * 2);
       blink_led(YELLOW_LED_PORT, i * 2);
     }
+    digitalWrite(BLUE_LED_PORT, HIGH);
+    digitalWrite(RED_LED_PORT, HIGH);
+    digitalWrite(YELLOW_LED_PORT, HIGH);
+    digitalWrite(GREEN_LED_PORT, HIGH);
+
     digitalWrite(STAT_LED_GREEN_PORT, LOW);
     digitalWrite(STAT_LED_BLUE_PORT, LOW);
     digitalWrite(STAT_LED_RED_PORT, LOW);
-    delay(100);
+    blink_led(STAT_LED_GREEN_PORT, 100);
+    blink_led(STAT_LED_GREEN_PORT, 100);
     digitalWrite(STAT_LED_GREEN_PORT, HIGH);
-    delay(100);
-    digitalWrite(STAT_LED_GREEN_PORT, LOW);
-    delay(100);
-    digitalWrite(STAT_LED_GREEN_PORT, HIGH);
-    delay(100);
     exit(0);
   } else {
     if (wrong_count > 3) {
