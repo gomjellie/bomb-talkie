@@ -7,7 +7,7 @@
 #define YELLOW_LED_PORT  9
 
 #define RED_BUTTON_PORT    7
-#define BLUE_BUTTON_PORT   6 // blue button 연결된 초록색선 선문제인지 버튼 문제인지 모르겠음 일단 파란 버튼 제외하고 만듬
+#define BLUE_BUTTON_PORT   6
 #define GREEN_BUTTON_PORT  4
 #define YELLOW_BUTTON_PORT 3
 
@@ -32,7 +32,7 @@ int ans[4] = { // 정답 answer
         7000,
         7400,
         7430,
-        7437,
+        7436,
 };
 int ans_helper[8][4] = {
         // [input_button][wrong_count]
@@ -42,7 +42,7 @@ int ans_helper[8][4] = {
         {RED_BUTTON_PORT, YELLOW_BUTTON_PORT, YELLOW_BUTTON_PORT, RED_BUTTON_PORT}, // YELLOW BUTTON CLICK
         {YELLOW_BUTTON_PORT, RED_BUTTON_PORT, GREEN_BUTTON_PORT, YELLOW_BUTTON_PORT}, // GREEN BUTTON CLICK
         {0, },
-        {0, }, //don't use blue button
+        {BLUE_BUTTON_PORT, BLUE_BUTTON_PORT, BLUE_BUTTON_PORT, BLUE_BUTTON_PORT}, // BLUE BUTTON CLICK
         {GREEN_BUTTON_PORT, GREEN_BUTTON_PORT, RED_BUTTON_PORT, GREEN_BUTTON_PORT}, //RED BUTTON
 };
 int wrong_count = 0;
@@ -53,6 +53,7 @@ void on_button_clicked();
 void on_red_clicked();
 void on_green_clicked();
 void on_yellow_clicked();
+void on_blue_clicked();
 void update_button_stat();
 int check_ans();
 void loop();
@@ -68,7 +69,7 @@ void setup(){
 
   pinMode(RED_BUTTON_PORT, INPUT_PULLUP);
   pinMode(GREEN_BUTTON_PORT, INPUT_PULLUP);
-  pinMode(GREEN_BUTTON_PORT, INPUT_PULLUP);
+  pinMode(BLUE_BUTTON_PORT, INPUT_PULLUP);
   pinMode(YELLOW_BUTTON_PORT, INPUT_PULLUP);
 
   pinMode(STAT_LED_BLUE_PORT, OUTPUT);
@@ -78,8 +79,6 @@ void setup(){
   Serial.begin(9600);
   Wire.begin(7);
   Wire.onRequest(bombState_send);
-
-
 }
 
 
@@ -111,7 +110,7 @@ void on_start() {
       break;
     case 1:
       digitalWrite(STAT_LED_RED_PORT, LOW);
-      analogWrite(STAT_LED_GREEN_PORT, 150);
+      digitalWrite(STAT_LED_GREEN_PORT, HIGH);
       digitalWrite(STAT_LED_BLUE_PORT, HIGH);
       break;
     case 2:
@@ -136,8 +135,14 @@ void on_button_clicked() {
     digitalWrite(RED_LED_PORT, LOW);
     on_red_clicked();
   }
-  if (button_stat[BLUE_BUTTON_PORT]) {
+  if (!button_stat[BLUE_BUTTON_PORT]) {
     // blue button doesn't work
+    while (!button_stat[BLUE_BUTTON_PORT]) {
+      digitalWrite(BLUE_LED_PORT, HIGH);
+      update_button_stat();
+    }
+    digitalWrite(BLUE_LED_PORT, LOW);
+    on_blue_clicked();
   }
   if (!button_stat[GREEN_BUTTON_PORT]) {
     while (!button_stat[GREEN_BUTTON_PORT]) {
@@ -155,6 +160,14 @@ void on_button_clicked() {
     digitalWrite(YELLOW_LED_PORT, LOW);
     on_yellow_clicked();
   }
+}
+
+void on_blue_clicked() {
+  Serial.println("blue pressed");
+  stacks += ans_helper[BLUE_BUTTON_PORT][wrong_count] * pow(10, final_stage-idx);
+  Serial.print(BLUE_BUTTON_PORT * pow(10, final_stage-idx)); Serial.println("added");
+  Serial.print("stack :"); Serial.println(stacks);
+  idx++;
 }
 
 void on_red_clicked() {
@@ -182,6 +195,7 @@ void on_yellow_clicked() {
 }
 
 void update_button_stat() {
+  button_stat[BLUE_BUTTON_PORT] = digitalRead(BLUE_BUTTON_PORT);
   button_stat[RED_BUTTON_PORT] = digitalRead(RED_BUTTON_PORT);
   button_stat[GREEN_BUTTON_PORT] = digitalRead(GREEN_BUTTON_PORT);
   button_stat[YELLOW_BUTTON_PORT] = digitalRead(YELLOW_BUTTON_PORT);
@@ -291,7 +305,7 @@ void loop() {
     delay(100);
   }
 
-  if (stage == 3) {
+  if (stage == 4) {
     bombState = SUCCESS;
     for (int i = 20; i > 5; i--) {
       blink_led(BLUE_LED_PORT, i * 2);
