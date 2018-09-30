@@ -290,7 +290,7 @@ void loop() {
 
   if (stage == 3) {
     bombState = SUCCESS;
-    for (int i = 20; i > 0; i--) {
+    for (int i = 20; i > 5; i--) {
       blink_led(BLUE_LED_PORT, i * 2);
       blink_led(RED_LED_PORT, i * 2);
       blink_led(GREEN_LED_PORT, i * 2);
@@ -307,9 +307,20 @@ void loop() {
     digitalWrite(STAT_LED_GREEN_PORT, HIGH);
     delay(100);
     exit(0);
-  } else if (stage > 3) {
-    bombState = FAIL;
   } else {
-    bombState = NORMAL;
+    if (wrong_count > 3) {
+      bombState = FAIL;
+      digitalWrite(STAT_LED_GREEN_PORT, LOW);
+      digitalWrite(STAT_LED_BLUE_PORT, LOW);
+      digitalWrite(STAT_LED_RED_PORT, LOW);
+      digitalWrite(STAT_LED_RED_PORT, HIGH);
+      delay(100);
+      digitalWrite(STAT_LED_RED_PORT, LOW);
+      delay(100);
+      digitalWrite(STAT_LED_RED_PORT, HIGH);
+      delay(100);
+    } else {
+      bombState = NORMAL;
+    }
   }
 }
