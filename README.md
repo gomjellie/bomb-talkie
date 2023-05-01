@@ -36,19 +36,25 @@ https://gomjellie.github.io/bomb-talkie
 
 ### 설계
 
-
-
 ![스케치](docs/img/bomb-sketch.jpeg)
 
 > 작품 스케치
 
 - 폭탄을 해제하는 과정에는 다양한 종류의 퍼즐들이 이용됩니다. 모든 퍼즐들을 풀어야만 폭탄이 해제됩니다.
 
+![완성본](docs/img/omb-talkie.jpg)
+
 - 각각의 퍼즐들은 모듈 형태로 되어 있습니다. 
+
+![메인 모듈](docs/img/dynamite.jpg)
 
 - 타이머가 달린 메인 모듈은 남은 시간과, 다른 모듈의 퍼즐을 푸는 과정에서 실수를 한 횟수를 표시해줍니다. 
 
+![전선 절단](docs/img/wire-cutting.jpg)
+
 - 나머지 모듈들에는 저마다의 해결 방법이 있는 퍼즐이 있습니다. 
+
+![금고 다이얼](docs/img/safe-dial.jpg)
 
 - 모듈들 속 퍼즐을 푸는 방법은 매뉴얼로 제공됩니다.
 
